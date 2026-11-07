@@ -8,24 +8,24 @@ const defaultData = {
     countdownTarget: "2027-12-12 09:00:00",
     
     groomFull: "Fazl El Hakeem, S.T",
-    groomBirth: "LAHIR : 01 JANUARI 2007",
-    groomParents: "PUTRA DARI BAPAK ANDY WEIR & IBU WINDY FLOREN",
-    groomQuote: "“BAGI SAYA, DIA BUKAN HANYA PASANGAN, TAPI JUGA RUMAH TEMPAT SAYA SELALU INGIN PULANG.”",
+    groomBirth: "Lahir : 01 Januari 2007",
+    groomParents: "Putra dari Bapak Andy Weir & Ibu Windy Floren",
+    groomQuote: "“Bagi saya, dia bukan hanya pasangan, tapi juga rumah tempat saya selalu ingin pulang.”",
     
     brideFull: "Nadya Sulfa, S.T",
-    brideBirth: "LAHIR : 31 DESEMBER 2007",
-    brideParents: "PUTRI DARI BAPAK ANDER TERZT & IBU DIANA LISEN",
-    brideQuote: "“DIA ADALAH ALASAN SAYA PERCAYA BAHWA DOA-DOA BAIK SELALU MENEMUKAN JALANNYA DI WAKTU YANG TEPAT.”",
+    brideBirth: "Lahir : 31 Desember 2007",
+    brideParents: "Putri dari Bapak Ander Terzt & Ibu Diana Lisen",
+    brideQuote: "“Dia adalah alasan saya percaya bahwa doa-doa baik selalu menemukan jalannya di waktu yang tepat.”",
     
-    story1Title: "FIRST MET (2020)",
-    story1Text: "KAMI BERTEMU DI KAMPUS - “Pertemuan sederhana yang menjadi awal dari cerita luar biasa.”",
-    story2Title: "THE JOURNEY (2024-2026)",
-    story2Text: "KAMI BEKERJA DI TEMPAT YANG SAMA - “Dari langkah yang sama, tumbuh rasa yang semakin nyata.”",
-    story3Title: "THE BEGINNING OF FOREVER (2027)",
-    story3Text: "KAMI MELANGKAH BERSAMA KE KEHIDUPAN BARU - “Hari ini bukan akhir dari perjalanan, melainkan awal dari selamanya.”",
+    story1Title: "First Met (2020)",
+    story1Text: "Kami bertemu di kampus - “Pertemuan sederhana yang menjadi awal dari cerita luar biasa.”",
+    story2Title: "The Journey (2024-2026)",
+    story2Text: "Kami bekerja di tempat yang sama - “Dari langkah yang sama, tumbuh rasa yang semakin nyata.”",
+    story3Title: "The Beginning of Forever (2027)",
+    story3Text: "Kami melangkah bersama ke kehidupan baru - “Hari ini bukan akhir dari perjalanan, melainkan awal dari selamanya.”",
     
-    mapsUrl: "https://www.google.com/maps/place/Sopo+GABEMA/@1.2635352,101.1785192,17z/",
-    cashlessText: "JIKA MEMBERI MERUPAKAN UNGKAPAN TANDA KASIH, BAPAK/IBU/SAUDARA/I DAPAT MEMBERI HADIAH SECARA CASHLESS. TERIMA KASIH."
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Hotel+Mulia+Senayan+Jakarta",
+    cashlessText: "Jika memberi merupakan ungkapan tanda kasih, Bapak/Ibu/Saudara/i dapat memberi hadiah secara cashless. Terima kasih."
 };
 
 // --- INISIALISASI & CEK LOGIN ---

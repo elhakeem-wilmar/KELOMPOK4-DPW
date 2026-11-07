@@ -106,11 +106,9 @@ if (musicBtn) {
     if (!music) return;
     if (music.paused) {
       music.play();
-      this.innerHTML = "♫";
       this.classList.add("playing");
     } else {
       music.pause();
-      this.innerHTML = "🔇";
       this.classList.remove("playing");
     }
   });
@@ -185,6 +183,8 @@ function initScrollSpy() {
     const targetId = item.getAttribute("data-nav") || item.getAttribute("href").replace("#", "");
     item.addEventListener("click", (e) => {
       e.preventDefault();
+      navItems.forEach((btn) => btn.classList.remove("active"));
+      item.classList.add("active");
       const targetSec = document.getElementById(targetId);
       if (targetSec) {
         targetSec.scrollIntoView({ behavior: "smooth" });

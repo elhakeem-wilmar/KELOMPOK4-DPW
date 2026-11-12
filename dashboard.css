@@ -416,6 +416,12 @@ body {
   white-space: nowrap;
 }
 
+.btn-preview svg,
+.btn-save svg {
+  flex-shrink: 0;
+  display: block;
+}
+
 .btn-preview:hover {
   border-color: var(--primary);
   color: var(--primary);
@@ -750,6 +756,14 @@ body {
   align-items: flex-end;
 }
 
+.add-guest-form .form-group {
+  margin-bottom: 0;
+}
+
+.add-guest-form input {
+  height: 42px;
+}
+
 .flex-1 {
   flex: 1;
 }
@@ -757,11 +771,12 @@ body {
 .btn-primary-compact {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   background: var(--primary);
   color: #ffffff;
   border: none;
-  padding: 10px 20px;
+  padding: 0 20px;
   border-radius: var(--radius-sm);
   font-size: 13.5px;
   font-weight: 600;
@@ -769,6 +784,7 @@ body {
   white-space: nowrap;
   transition: all 0.2s ease;
   height: 42px;
+  flex-shrink: 0;
 }
 
 .btn-primary-compact:hover {
@@ -1077,20 +1093,46 @@ body {
     display: none;
   }
 
+  .topbar-title {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+
   .topbar h1 {
-    font-size: 16px;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .btn-preview {
-    padding: 7px 10px;
-    font-size: 11.5px;
-    border-radius: 6px;
+  .topbar-actions {
+    gap: 8px;
+    flex-shrink: 0;
   }
 
+  .btn-preview .btn-text,
+  .btn-save .btn-text {
+    display: none !important;
+  }
+
+  .btn-preview,
   .btn-save {
-    padding: 7px 12px;
-    font-size: 12px;
-    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+
+  .btn-preview svg,
+  .btn-save svg {
+    width: 17px;
+    height: 17px;
+    margin: 0;
   }
 
   .autosave-hint {

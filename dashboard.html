@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard Admin - Fazl & Nadya Wedding</title>
+    <title>Executive Admin Dashboard - Fazl & Nadya Wedding</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet" />
     <link rel="stylesheet" href="dashboard.css" />
   </head>
@@ -15,15 +15,20 @@
     <!-- ================= HALAMAN LOGIN ================= -->
     <div id="loginView" class="login-container">
       <div class="login-card">
-        <h2>ADMIN LOGIN</h2>
-        <p>Kelola Data Undangan Pernikahan</p>
+        <div class="login-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield-check"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+          <span>Executive Portal</span>
+        </div>
+        <h2>Panel Pengelola Undangan</h2>
+        <p class="login-sub">Kelola seluruh konten, media, dan tamu pernikahan Fazl & Nadya</p>
         <form id="loginForm">
           <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username">Username Admin</label>
             <input
               type="text"
               id="username"
               placeholder="Masukkan username"
+              autocomplete="username"
               required />
           </div>
           <div class="form-group">
@@ -32,11 +37,14 @@
               type="password"
               id="password"
               placeholder="Masukkan password"
+              autocomplete="current-password"
               required />
           </div>
-          <button type="submit" class="btn-primary">MASUK</button>
+          <button type="submit" class="btn-primary">
+            <span>Masuk ke Dashboard</span>
+          </button>
           <div id="loginError" class="error-msg">
-            Username atau Password salah!
+            Username atau Password salah! (Default: admin / 123456)
           </div>
         </form>
       </div>
@@ -45,224 +53,681 @@
     <!-- ================= DASHBOARD UTAMA ================= -->
     <div id="dashboardView" class="dashboard-container" style="display: none">
       <!-- SIDEBAR -->
-      <aside class="sidebar">
+      <div class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
+      <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
+          <div class="brand-badge">Wedding Administration</div>
           <h2>Fazl & Nadya</h2>
-          <small>Wedding Admin Panel</small>
+          <small>Sistem Manajemen Undangan Mewah</small>
         </div>
+        
         <nav class="sidebar-menu">
-          <button class="nav-btn active" onclick="switchTab('pengantin')">
-            📌 Pengantin & Utama
+          <button class="nav-btn active" data-tab="pengantin" onclick="switchTab('pengantin', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>
+            <span>Mempelai & Utama</span>
           </button>
-          <button class="nav-btn" onclick="switchTab('detail')">
-            👤 Detail Pasangan
+          <button class="nav-btn" data-tab="detail" onclick="switchTab('detail', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-users"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            <span>Detail Pasangan</span>
           </button>
-          <button class="nav-btn" onclick="switchTab('story')">
-            📖 Love Story
+          <button class="nav-btn" data-tab="acara" onclick="switchTab('acara', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg>
+            <span>Waktu & Lokasi Acara</span>
           </button>
-          <button class="nav-btn" onclick="switchTab('lokasi')">
-            📍 Lokasi & Media
+          <button class="nav-btn" data-tab="story" onclick="switchTab('story', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span>Love Story & Media</span>
           </button>
-          <button class="nav-btn" onclick="switchTab('ucapan')">
-            💌 Daftar Ucapan
+          <button class="nav-btn" data-tab="galeri" onclick="switchTab('galeri', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-images"><path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16"/><path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2"/><circle cx="13" cy="7" r="1" fill="currentColor"/><rect x="8" y="2" width="14" height="14" rx="2"/></svg>
+            <span>Galeri Foto (8 Foto)</span>
+          </button>
+          <button class="nav-btn" data-tab="cashless" onclick="switchTab('cashless', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-qr-code"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+            <span>Amplop & QR Digital</span>
+          </button>
+          <button class="nav-btn" data-tab="tamu" onclick="switchTab('tamu', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-check"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="16 11 18 13 22 9"/></svg>
+            <span>Manajemen Tamu (ID Link)</span>
+          </button>
+          <button class="nav-btn" data-tab="ucapan" onclick="switchTab('ucapan', this)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Daftar Ucapan & Doa</span>
           </button>
         </nav>
-        <button class="btn-logout" onclick="logout()">LOGOUT</button>
+
+        <div class="sidebar-footer">
+          <button class="btn-logout" onclick="logout()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+            <span>Keluar Akun</span>
+          </button>
+        </div>
       </aside>
 
       <!-- CONTENT AREA -->
       <main class="main-content">
         <!-- HEADER -->
         <header class="topbar">
-          <h1 id="pageTitle">Pengantin & Informasi Utama</h1>
-          <a href="index.html" target="_blank" class="btn-preview"
-            >🔗 Lihat Landing Page</a
-          >
+          <button type="button" class="btn-menu" onclick="toggleSidebar()" aria-label="Tampilkan atau sembunyikan menu" aria-controls="sidebar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+          </button>
+          <div class="topbar-title">
+            <span class="topbar-subtitle">Halaman Konfigurasi</span>
+            <h1 id="pageTitle">Mempelai & Informasi Utama</h1>
+          </div>
+          <div class="topbar-actions">
+            <a href="index.html" target="_blank" class="btn-preview">Lihat undangan</a>
+            <span class="autosave-hint" id="autosaveHint" hidden>Perubahan di tab ini tersimpan otomatis</span>
+            <button type="submit" form="adminDataForm" class="btn-save">Simpan Perubahan</button>
+          </div>
         </header>
 
         <form id="adminDataForm">
           <!-- TAB 1: PENGANTIN & UTAMA -->
           <section id="tab-pengantin" class="tab-content active">
             <div class="card">
-              <h3>Nama Pasangan Utama</h3>
+              <div class="card-header">
+                <h3>Nama Panggilan Pasangan</h3>
+                <p>Nama ini akan muncul pada judul utama cover, header, dan ringkasan undangan.</p>
+              </div>
               <div class="form-grid">
                 <div class="form-group">
-                  <label>Nama Pria (Panggilan)</label>
-                  <input type="text" id="groomShort" name="groomShort" />
+                  <label for="groomShort">Nama Pengantin Pria (Panggilan)</label>
+                  <input type="text" id="groomShort" name="groomShort" placeholder="Contoh: Fazl" required />
                 </div>
                 <div class="form-group">
-                  <label>Nama Wanita (Panggilan)</label>
-                  <input type="text" id="brideShort" name="brideShort" />
+                  <label for="brideShort">Nama Pengantin Wanita (Panggilan)</label>
+                  <input type="text" id="brideShort" name="brideShort" placeholder="Contoh: Nadya" required />
                 </div>
               </div>
             </div>
 
             <div class="card">
-              <h3>Waktu & Countdown Acara</h3>
+              <div class="card-header">
+                <h3>Cover Page & Tagline</h3>
+                <p>Teks pembuka dan gambar latar belakang utama pada halaman cover.</p>
+              </div>
               <div class="form-grid">
                 <div class="form-group">
-                  <label>Tanggal (HH)</label>
-                  <input
-                    type="text"
-                    id="eventDay"
-                    name="eventDay"
-                    placeholder="12" />
+                  <label for="coverTag">Tagline Cover</label>
+                  <input type="text" id="coverTag" name="coverTag" placeholder="THE WEDDING OF" />
                 </div>
                 <div class="form-group">
-                  <label>Bulan (BB)</label>
-                  <input
-                    type="text"
-                    id="eventMonth"
-                    name="eventMonth"
-                    placeholder="12" />
+                  <label for="coverSub">Subteks Undangan</label>
+                  <input type="text" id="coverSub" name="coverSub" placeholder="Kami mengundang Anda untuk hadir..." />
                 </div>
-                <div class="form-group">
-                  <label>Tahun (TTTT)</label>
-                  <input
-                    type="text"
-                    id="eventYear"
-                    name="eventYear"
-                    placeholder="2027" />
+              </div>
+              <div class="media-uploader-group">
+                <label>Foto Latar Belakang Cover</label>
+                <div class="media-input-flex">
+                  <input type="text" id="coverBg" name="coverBg" placeholder="assets/bg.jpg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'coverBg', 'preview-coverBg')" hidden />
+                    <span>Upload Foto</span>
+                  </label>
                 </div>
-                <div class="form-group">
-                  <label>Target Countdown (YYYY-MM-DD HH:MM:SS)</label>
-                  <input
-                    type="text"
-                    id="countdownTarget"
-                    name="countdownTarget"
-                    placeholder="2027-12-12 09:00:00" />
+                <div class="media-preview-box">
+                  <img id="preview-coverBg" src="assets/bg.jpg" alt="Preview Cover" onerror="this.style.display='none'" onload="this.style.display='block'" />
                 </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Teks Sambutan & Doa Restu (Page 2)</h3>
+                <p>Kutipan ayat suci dan kalimat pembuka bagi para tamu undangan.</p>
+              </div>
+              <div class="form-group">
+                <label for="greetingTitle">Judul Sambutan</label>
+                <input type="text" id="greetingTitle" name="greetingTitle" placeholder="Salam Hangat," />
+              </div>
+              <div class="form-group">
+                <label for="greetingVerse">Kutipan Ayat Suci / Kata Bijak</label>
+                <textarea id="greetingVerse" name="greetingVerse" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="greetingText1">Paragraf Pembuka 1</label>
+                <textarea id="greetingText1" name="greetingText1" rows="3"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="greetingText2">Paragraf Pembuka 2</label>
+                <textarea id="greetingText2" name="greetingText2" rows="3"></textarea>
               </div>
             </div>
           </section>
 
-          <!-- TAB 2: DETAIL PASANGAN -->
+          <!-- TAB 2: DETAIL MEMPELAI -->
           <section id="tab-detail" class="tab-content">
             <div class="card">
-              <h3>Detail Pengantin Pria (Groom)</h3>
-              <div class="form-group">
-                <label>Nama Lengkap & Gelar</label>
-                <input type="text" id="groomFull" name="groomFull" />
+              <div class="card-header">
+                <h3>Detail Pengantin Pria (The Groom)</h3>
+                <p>Informasi profil lengkap, nama orang tua, kutipan, dan foto mempelai pria.</p>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="groomFull">Nama Lengkap & Gelar</label>
+                  <input type="text" id="groomFull" name="groomFull" />
+                </div>
+                <div class="form-group">
+                  <label for="groomBirth">Keterangan Tanggal Lahir</label>
+                  <input type="text" id="groomBirth" name="groomBirth" />
+                </div>
               </div>
               <div class="form-group">
-                <label>Tanggal Lahir</label>
-                <input type="text" id="groomBirth" name="groomBirth" />
-              </div>
-              <div class="form-group">
-                <label>Nama Orang Tua</label>
+                <label for="groomParents">Nama Orang Tua</label>
                 <input type="text" id="groomParents" name="groomParents" />
               </div>
               <div class="form-group">
-                <label>Kutipan / Quote</label>
+                <label for="groomQuote">Kutipan Pribadi (Quote)</label>
                 <textarea id="groomQuote" name="groomQuote" rows="3"></textarea>
+              </div>
+              <div class="media-uploader-group">
+                <label>Foto Profil Pengantin Pria</label>
+                <div class="media-input-flex">
+                  <input type="text" id="groomPhoto" name="groomPhoto" placeholder="assets/fazl.jpeg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'groomPhoto', 'preview-groomPhoto')" hidden />
+                    <span>Upload Foto</span>
+                  </label>
+                </div>
+                <div class="media-preview-box">
+                  <img id="preview-groomPhoto" src="assets/fazl.jpeg" alt="Preview Groom" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                </div>
               </div>
             </div>
 
             <div class="card">
-              <h3>Detail Pengantin Wanita (Bride)</h3>
-              <div class="form-group">
-                <label>Nama Lengkap & Gelar</label>
-                <input type="text" id="brideFull" name="brideFull" />
+              <div class="card-header">
+                <h3>Detail Pengantin Wanita (The Bride)</h3>
+                <p>Informasi profil lengkap, nama orang tua, kutipan, dan foto mempelai wanita.</p>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="brideFull">Nama Lengkap & Gelar</label>
+                  <input type="text" id="brideFull" name="brideFull" />
+                </div>
+                <div class="form-group">
+                  <label for="brideBirth">Keterangan Tanggal Lahir</label>
+                  <input type="text" id="brideBirth" name="brideBirth" />
+                </div>
               </div>
               <div class="form-group">
-                <label>Tanggal Lahir</label>
-                <input type="text" id="brideBirth" name="brideBirth" />
-              </div>
-              <div class="form-group">
-                <label>Nama Orang Tua</label>
+                <label for="brideParents">Nama Orang Tua</label>
                 <input type="text" id="brideParents" name="brideParents" />
               </div>
               <div class="form-group">
-                <label>Kutipan / Quote</label>
+                <label for="brideQuote">Kutipan Pribadi (Quote)</label>
                 <textarea id="brideQuote" name="brideQuote" rows="3"></textarea>
               </div>
+              <div class="media-uploader-group">
+                <label>Foto Profil Pengantin Wanita</label>
+                <div class="media-input-flex">
+                  <input type="text" id="bridePhoto" name="bridePhoto" placeholder="assets/nadya.jpeg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'bridePhoto', 'preview-bridePhoto')" hidden />
+                    <span>Upload Foto</span>
+                  </label>
+                </div>
+                <div class="media-preview-box">
+                  <img id="preview-bridePhoto" src="assets/nadya.jpeg" alt="Preview Bride" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                </div>
+              </div>
             </div>
           </section>
 
-          <!-- TAB 3: LOVE STORY -->
+          <!-- TAB 3: WAKTU & LOKASI ACARA -->
+          <section id="tab-acara" class="tab-content">
+            <div class="card">
+              <div class="card-header">
+                <h3>Jadwal & Countdown Acara</h3>
+                <p>Tanggal acara dan target hitung mundur otomatis di landing page.</p>
+              </div>
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label for="eventDay">Tanggal (Hari)</label>
+                  <input type="text" id="eventDay" name="eventDay" placeholder="12" />
+                </div>
+                <div class="form-group">
+                  <label for="eventMonth">Bulan (Angka)</label>
+                  <input type="text" id="eventMonth" name="eventMonth" placeholder="12" />
+                </div>
+                <div class="form-group">
+                  <label for="eventYear">Tahun</label>
+                  <input type="text" id="eventYear" name="eventYear" placeholder="2027" />
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="eventTime">Keterangan Hari & Jam</label>
+                  <input type="text" id="eventTime" name="eventTime" placeholder="Minggu • Pukul 09:00 WIB" />
+                </div>
+                <div class="form-group">
+                  <label for="countdownTarget">Waktu Target Countdown (YYYY-MM-DD HH:MM:SS)</label>
+                  <input type="text" id="countdownTarget" name="countdownTarget" placeholder="2027-12-12 09:00:00" />
+                </div>
+              </div>
+              <div class="media-uploader-group">
+                <label>Foto Tengah Halaman Acara</label>
+                <div class="media-input-flex">
+                  <input type="text" id="eventPhoto" name="eventPhoto" placeholder="assets/gallery4.jpeg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'eventPhoto', 'preview-eventPhoto')" hidden />
+                    <span>Upload Foto</span>
+                  </label>
+                </div>
+                <div class="media-preview-box">
+                  <img id="preview-eventPhoto" src="assets/gallery4.jpeg" alt="Preview Event" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Lokasi Venue & Peta Navigasi</h3>
+                <p>Detail nama tempat, hotel, alamat lengkap, dan tautan rute Google Maps.</p>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="venueName">Nama Ruangan / Ballroom</label>
+                  <input type="text" id="venueName" name="venueName" placeholder="The Grand Ballroom" />
+                </div>
+                <div class="form-group">
+                  <label for="venueHotel">Nama Hotel / Gedung</label>
+                  <input type="text" id="venueHotel" name="venueHotel" placeholder="Hotel Mulia Senayan, Jakarta" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="venueAddress">Alamat Lengkap Venue</label>
+                <textarea id="venueAddress" name="venueAddress" rows="2"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="mapsUrl">Tautan Google Maps</label>
+                <input type="text" id="mapsUrl" name="mapsUrl" placeholder="https://www.google.com/maps/..." />
+              </div>
+              <div class="media-uploader-group">
+                <label>Foto Gedung / Hotel Mewah</label>
+                <div class="media-input-flex">
+                  <input type="text" id="venuePhoto" name="venuePhoto" placeholder="assets/hotel-mewah.jpg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'venuePhoto', 'preview-venuePhoto')" hidden />
+                    <span>Upload Foto</span>
+                  </label>
+                </div>
+                <div class="media-preview-box">
+                  <img id="preview-venuePhoto" src="assets/hotel-mewah.jpg" alt="Preview Venue" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 4: LOVE STORY & MEDIA -->
           <section id="tab-story" class="tab-content">
             <div class="card">
-              <h3>Story 1: Pertemuan Pertama</h3>
-              <div class="form-group">
-                <label>Judul & Tahun</label>
-                <input type="text" id="story1Title" name="story1Title" />
+              <div class="card-header">
+                <h3>Cerita 1: Pertemuan Pertama (First Met)</h3>
               </div>
-              <div class="form-group">
-                <label>Deskripsi Singkat</label>
-                <textarea id="story1Text" name="story1Text" rows="2"></textarea>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="story1Title">Judul & Tahun</label>
+                  <input type="text" id="story1Title" name="story1Title" />
+                </div>
+                <div class="form-group">
+                  <label for="story1Text">Narasi Singkat</label>
+                  <input type="text" id="story1Text" name="story1Text" />
+                </div>
+              </div>
+              <div class="media-uploader-group">
+                <label>Foto Story 1</label>
+                <div class="media-input-flex">
+                  <input type="text" id="story1Photo" name="story1Photo" placeholder="assets/gallery1.jpeg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'story1Photo', 'preview-story1Photo')" hidden />
+                    <span>Upload Foto</span>
+                  </label>
+                </div>
+                <div class="media-preview-box">
+                  <img id="preview-story1Photo" src="assets/gallery1.jpeg" alt="Story 1" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                </div>
               </div>
             </div>
 
             <div class="card">
-              <h3>Story 2: Perjalanan</h3>
-              <div class="form-group">
-                <label>Judul & Tahun</label>
-                <input type="text" id="story2Title" name="story2Title" />
+              <div class="card-header">
+                <h3>Cerita 2: Perjalanan Bersama (The Journey)</h3>
               </div>
-              <div class="form-group">
-                <label>Deskripsi Singkat</label>
-                <textarea id="story2Text" name="story2Text" rows="2"></textarea>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="story2Title">Judul & Tahun</label>
+                  <input type="text" id="story2Title" name="story2Title" />
+                </div>
+                <div class="form-group">
+                  <label for="story2Text">Narasi Singkat</label>
+                  <input type="text" id="story2Text" name="story2Text" />
+                </div>
+              </div>
+              <div class="media-uploader-group">
+                <label>Foto Story 2</label>
+                <div class="media-input-flex">
+                  <input type="text" id="story2Photo" name="story2Photo" placeholder="assets/gallery2.jpeg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'story2Photo', 'preview-story2Photo')" hidden />
+                    <span>Upload Foto</span>
+                  </label>
+                </div>
+                <div class="media-preview-box">
+                  <img id="preview-story2Photo" src="assets/gallery2.jpeg" alt="Story 2" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                </div>
               </div>
             </div>
 
             <div class="card">
-              <h3>Story 3: Awal Selamanya</h3>
-              <div class="form-group">
-                <label>Judul & Tahun</label>
-                <input type="text" id="story3Title" name="story3Title" />
+              <div class="card-header">
+                <h3>Cerita 3: Melangkah Selamanya (Beginning of Forever)</h3>
+              </div>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="story3Title">Judul & Tahun</label>
+                  <input type="text" id="story3Title" name="story3Title" />
+                </div>
+                <div class="form-group">
+                  <label for="story3Text">Narasi Singkat</label>
+                  <input type="text" id="story3Text" name="story3Text" />
+                </div>
+              </div>
+              <div class="media-uploader-group">
+                <label>Foto Story 3</label>
+                <div class="media-input-flex">
+                  <input type="text" id="story3Photo" name="story3Photo" placeholder="assets/gallery3.jpeg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'story3Photo', 'preview-story3Photo')" hidden />
+                    <span>Upload Foto</span>
+                  </label>
+                </div>
+                <div class="media-preview-box">
+                  <img id="preview-story3Photo" src="assets/gallery3.jpeg" alt="Story 3" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Video Sinematik & Musik Latar (Audio)</h3>
+                <p>Pengaturan file video pernikahan dan musik audio pemutar floating.</p>
               </div>
               <div class="form-group">
-                <label>Deskripsi Singkat</label>
-                <textarea id="story3Text" name="story3Text" rows="2"></textarea>
+                <label>Video Sinematik (Format MP4)</label>
+                <div class="media-input-flex">
+                  <input type="text" id="videoSrc" name="videoSrc" placeholder="assets/Movie.mp4" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="video/mp4,video/*" onchange="handleFileUpload(this, 'videoSrc', null)" hidden />
+                    <span>Upload Video</span>
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Musik Latar Undangan (Format MP3)</label>
+                <div class="media-input-flex">
+                  <input type="text" id="musicSrc" name="musicSrc" placeholder="assets/music.mp3" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="audio/mp3,audio/*" onchange="handleFileUpload(this, 'musicSrc', null)" hidden />
+                    <span>Upload Musik</span>
+                  </label>
+                </div>
               </div>
             </div>
           </section>
 
-          <!-- TAB 4: LOKASI & MEDIA -->
-          <section id="tab-lokasi" class="tab-content">
+          <!-- TAB 5: GALERI FOTO (8 FOTO) -->
+          <section id="tab-galeri" class="tab-content">
             <div class="card">
-              <h3>Lokasi Acara</h3>
-              <div class="form-group">
-                <label>Link Google Maps</label>
-                <input type="text" id="mapsUrl" name="mapsUrl" />
+              <div class="card-header">
+                <h3>Galeri Foto Pernikahan (8 Frame Foto)</h3>
+                <p>Kelola setiap foto yang tampil pada mosaik galeri foto interaktif.</p>
               </div>
-              <div class="form-group">
-                <label>Teks Tombol Hadiah / Cashless</label>
-                <textarea
-                  id="cashlessText"
-                  name="cashlessText"
-                  rows="2"></textarea>
+              
+              <div class="gallery-admin-grid">
+                <!-- FOTO 1 -->
+                <div class="gallery-admin-item">
+                  <label>Foto 1</label>
+                  <div class="media-input-flex">
+                    <input type="text" id="galleryPhoto1" name="galleryPhoto1" placeholder="assets/gallery1.jpeg" />
+                    <label class="btn-upload-file">
+                      <input type="file" accept="image/*" onchange="handleFileUpload(this, 'galleryPhoto1', 'preview-gal1')" hidden />
+                      <span>Upload</span>
+                    </label>
+                  </div>
+                  <div class="media-preview-box">
+                    <img id="preview-gal1" src="assets/gallery1.jpeg" alt="Gal 1" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                  </div>
+                </div>
+
+                <!-- FOTO 2 -->
+                <div class="gallery-admin-item">
+                  <label>Foto 2</label>
+                  <div class="media-input-flex">
+                    <input type="text" id="galleryPhoto2" name="galleryPhoto2" placeholder="assets/gallery3.jpeg" />
+                    <label class="btn-upload-file">
+                      <input type="file" accept="image/*" onchange="handleFileUpload(this, 'galleryPhoto2', 'preview-gal2')" hidden />
+                      <span>Upload</span>
+                    </label>
+                  </div>
+                  <div class="media-preview-box">
+                    <img id="preview-gal2" src="assets/gallery3.jpeg" alt="Gal 2" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                  </div>
+                </div>
+
+                <!-- FOTO 3 -->
+                <div class="gallery-admin-item">
+                  <label>Foto 3</label>
+                  <div class="media-input-flex">
+                    <input type="text" id="galleryPhoto3" name="galleryPhoto3" placeholder="assets/gallery6.jpeg" />
+                    <label class="btn-upload-file">
+                      <input type="file" accept="image/*" onchange="handleFileUpload(this, 'galleryPhoto3', 'preview-gal3')" hidden />
+                      <span>Upload</span>
+                    </label>
+                  </div>
+                  <div class="media-preview-box">
+                    <img id="preview-gal3" src="assets/gallery6.jpeg" alt="Gal 3" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                  </div>
+                </div>
+
+                <!-- FOTO 4 -->
+                <div class="gallery-admin-item">
+                  <label>Foto 4</label>
+                  <div class="media-input-flex">
+                    <input type="text" id="galleryPhoto4" name="galleryPhoto4" placeholder="assets/gallery2.jpeg" />
+                    <label class="btn-upload-file">
+                      <input type="file" accept="image/*" onchange="handleFileUpload(this, 'galleryPhoto4', 'preview-gal4')" hidden />
+                      <span>Upload</span>
+                    </label>
+                  </div>
+                  <div class="media-preview-box">
+                    <img id="preview-gal4" src="assets/gallery2.jpeg" alt="Gal 4" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                  </div>
+                </div>
+
+                <!-- FOTO 5 -->
+                <div class="gallery-admin-item">
+                  <label>Foto 5</label>
+                  <div class="media-input-flex">
+                    <input type="text" id="galleryPhoto5" name="galleryPhoto5" placeholder="assets/gallery8.jpeg" />
+                    <label class="btn-upload-file">
+                      <input type="file" accept="image/*" onchange="handleFileUpload(this, 'galleryPhoto5', 'preview-gal5')" hidden />
+                      <span>Upload</span>
+                    </label>
+                  </div>
+                  <div class="media-preview-box">
+                    <img id="preview-gal5" src="assets/gallery8.jpeg" alt="Gal 5" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                  </div>
+                </div>
+
+                <!-- FOTO 6 -->
+                <div class="gallery-admin-item">
+                  <label>Foto 6</label>
+                  <div class="media-input-flex">
+                    <input type="text" id="galleryPhoto6" name="galleryPhoto6" placeholder="assets/1.jpeg" />
+                    <label class="btn-upload-file">
+                      <input type="file" accept="image/*" onchange="handleFileUpload(this, 'galleryPhoto6', 'preview-gal6')" hidden />
+                      <span>Upload</span>
+                    </label>
+                  </div>
+                  <div class="media-preview-box">
+                    <img id="preview-gal6" src="assets/1.jpeg" alt="Gal 6" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                  </div>
+                </div>
+
+                <!-- FOTO 7 -->
+                <div class="gallery-admin-item">
+                  <label>Foto 7</label>
+                  <div class="media-input-flex">
+                    <input type="text" id="galleryPhoto7" name="galleryPhoto7" placeholder="assets/gallery7.jpeg" />
+                    <label class="btn-upload-file">
+                      <input type="file" accept="image/*" onchange="handleFileUpload(this, 'galleryPhoto7', 'preview-gal7')" hidden />
+                      <span>Upload</span>
+                    </label>
+                  </div>
+                  <div class="media-preview-box">
+                    <img id="preview-gal7" src="assets/gallery7.jpeg" alt="Gal 7" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                  </div>
+                </div>
+
+                <!-- FOTO 8 -->
+                <div class="gallery-admin-item">
+                  <label>Foto 8</label>
+                  <div class="media-input-flex">
+                    <input type="text" id="galleryPhoto8" name="galleryPhoto8" placeholder="assets/gallery4.jpeg" />
+                    <label class="btn-upload-file">
+                      <input type="file" accept="image/*" onchange="handleFileUpload(this, 'galleryPhoto8', 'preview-gal8')" hidden />
+                      <span>Upload</span>
+                    </label>
+                  </div>
+                  <div class="media-preview-box">
+                    <img id="preview-gal8" src="assets/gallery4.jpeg" alt="Gal 8" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
-          <!-- ACTION BUTTON -->
-          <div class="save-bar" id="saveBar">
-            <button type="submit" class="btn-save">💾 SIMPAN PERUBAHAN</button>
-          </div>
+          <!-- TAB 6: AMPLOP & QR DIGITAL -->
+          <section id="tab-cashless" class="tab-content">
+            <div class="card">
+              <div class="card-header">
+                <h3>Amplop Digital & QRIS Cashless</h3>
+                <p>Informasi rekening tanda kasih serta gambar QR Code digital.</p>
+              </div>
+              <div class="form-group">
+                <label for="cashlessText">Teks Doa & Pesan Hadiah Cashless</label>
+                <textarea id="cashlessText" name="cashlessText" rows="3"></textarea>
+              </div>
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label for="bankName">Nama Bank / E-Wallet</label>
+                  <input type="text" id="bankName" name="bankName" placeholder="BCA / Mandiri / GoPay" />
+                </div>
+                <div class="form-group">
+                  <label for="accountNumber">Nomor Rekening / HP</label>
+                  <input type="text" id="accountNumber" name="accountNumber" placeholder="1234567890" />
+                </div>
+                <div class="form-group">
+                  <label for="accountName">Atas Nama (Penerima)</label>
+                  <input type="text" id="accountName" name="accountName" placeholder="Fazl El Hakeem" />
+                </div>
+              </div>
+              <div class="media-uploader-group">
+                <label>Foto QR Code QRIS / Rekening</label>
+                <div class="media-input-flex">
+                  <input type="text" id="qrPhoto" name="qrPhoto" placeholder="assets/QR code.jpeg" />
+                  <label class="btn-upload-file">
+                    <input type="file" accept="image/*" onchange="handleFileUpload(this, 'qrPhoto', 'preview-qrPhoto')" hidden />
+                    <span>Upload QR</span>
+                  </label>
+                </div>
+                <div class="media-preview-box">
+                  <img id="preview-qrPhoto" src="assets/QR code.jpeg" alt="QR Code" onerror="this.style.display='none'" onload="this.style.display='block'" />
+                </div>
+              </div>
+            </div>
+          </section>
+
         </form>
 
-        <!-- TAB 5: DAFTAR UCAPAN (GUESTBOOK) -->
-        <section id="tab-ucapan" class="tab-content">
+        <!-- TAB 7: MANAJEMEN TAMU (GUEST ID LINK) -->
+        <section id="tab-tamu" class="tab-content">
+          <div class="card">
+            <div class="card-header">
+              <h3>Tambah Tamu Undangan Baru</h3>
+              <p>Setiap tamu memiliki ID unik sehingga nama tamu langsung tertera otomatis saat link dibuka.</p>
+            </div>
+            <form id="addGuestForm" class="add-guest-form">
+              <div class="form-group flex-1">
+                <label for="newGuestName">Nama Tamu Undangan</label>
+                <input type="text" id="newGuestName" placeholder="Contoh: Bapak Ir. H. Joko Widodo & Rekan" required />
+              </div>
+              <button type="submit" class="btn-primary-compact">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Tambah Tamu</span>
+              </button>
+            </form>
+          </div>
+
           <div class="card">
             <div class="card-header-flex">
-              <h3>Pesan & Ucapan Tamu</h3>
-              <button class="btn-danger-sm" onclick="clearAllWishes()">
-                Hapus Semua Pesan
-              </button>
+              <div>
+                <h3>Daftar Tamu & Link Undangan</h3>
+                <p>Klik tombol 'Salin Link' untuk menyalin tautan khusus setiap tamu ke clipboard.</p>
+              </div>
+              <span class="badge-count" id="guestCountBadge">0 Tamu</span>
             </div>
-            <div class="table-responsive">
+
+            <div class="table-container">
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>No</th>
-                    <th>Nama Tamu</th>
-                    <th>Pesan / Ucapan</th>
-                    <th>Aksi</th>
+                    <th style="width: 60px;">ID</th>
+                    <th style="width: 250px;">Nama Tamu</th>
+                    <th>Link Undangan Khusus</th>
+                    <th style="width: 170px; text-align: right;">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="guestsTableBody">
+                  <!-- Data tamu diisi dinamis lewat JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 8: DAFTAR UCAPAN & DOA (GUESTBOOK) -->
+        <section id="tab-ucapan" class="tab-content">
+          <div class="card">
+            <div class="card-header-flex">
+              <div>
+                <h3>Pesan & Doa Restu Tamu</h3>
+                <p>Daftar ucapan yang dikirimkan tamu melalui form RSVP landing page.</p>
+              </div>
+              <div class="ucapan-header-actions">
+                <span class="badge-count" id="wishCountBadge">0 Pesan</span>
+                <button type="button" class="btn-danger-outline" onclick="clearAllWishes()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                  <span>Hapus Semua</span>
+                </button>
+              </div>
+            </div>
+            
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th style="width: 60px;">No</th>
+                    <th style="width: 220px;">Nama Tamu</th>
+                    <th>Pesan / Doa Restu</th>
+                    <th style="width: 140px;">Waktu Kirim</th>
+                    <th style="width: 90px; text-align: right;">Aksi</th>
                   </tr>
                 </thead>
                 <tbody id="wishesTableBody">
-                  <!-- Data ucapan diisi lewat JS -->
+                  <!-- Data ucapan diisi dinamis lewat JS -->
                 </tbody>
               </table>
             </div>
@@ -272,7 +737,10 @@
     </div>
 
     <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="toast">Data berhasil disimpan!</div>
+    <div id="toast" class="toast">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg>
+      <span id="toastMessage">Data berhasil disimpan!</span>
+    </div>
 
     <script src="dashboard.js"></script>
   </body>

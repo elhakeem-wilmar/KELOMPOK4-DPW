@@ -1,20 +1,37 @@
 <?php
-$data_tamu = [
-    1 => "Susilo Bambang Yudhoyono",
-    2 => "Joko Widodo",
-    3 => "Prabowo Subianto",
-    4 => "NCT Dream", 
-    5 => "BTS",
-    6 => "BABY MONSTER",
-    7 => "HEARTS2HEARTS",
-    8 => "AMBATUKAMBA"
-];
+$guests_file = __DIR__ . '/data/guests.json';
+$data_tamu = [];
+if (file_exists($guests_file)) {
+    $raw = file_get_contents($guests_file);
+    $arr = json_decode($raw, true);
+    if (is_array($arr)) {
+        foreach ($arr as $g) {
+            if (isset($g['id']) && isset($g['name'])) {
+                $data_tamu[(int)$g['id']] = $g['name'];
+            }
+        }
+    }
+}
+if (empty($data_tamu)) {
+    $data_tamu = [
+        1 => 'Susilo Bambang Yudhoyono',
+        2 => 'Joko Widodo',
+        3 => 'Prabowo Subianto',
+        4 => 'NCT Dream', 
+        5 => 'BTS',
+        6 => 'BABY MONSTER',
+        7 => 'HEARTS2HEARTS',
+        8 => 'AMBATUKAMBA'
+    ];
+}
 
-$id_tamu = isset($_GET['tamu']) ? $_GET['tamu'] : null;
+$id_tamu = isset($_GET['tamu']) ? (int)$_GET['tamu'] : (isset($_GET['to']) && is_numeric($_GET['to']) ? (int)$_GET['to'] : null);
 
-$nama_tamu_tampil = "Tamu Undangan"; 
-if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
-    $nama_tamu_tampil = $data_tamu[$id_tamu]; 
+$nama_tamu_tampil = 'Tamu Undangan'; 
+if ($id_tamu !== null && array_key_exists($id_tamu, $data_tamu)) {
+    $nama_tamu_tampil = htmlspecialchars($data_tamu[$id_tamu]); 
+} elseif (isset($_GET['to']) && !empty(trim($_GET['to']))) {
+    $nama_tamu_tampil = htmlspecialchars(trim($_GET['to']));
 }
 ?>
 <!DOCTYPE html>
@@ -61,7 +78,7 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
     <div class="batik-bg-pattern"></div>
     
     <div class="cover-content">
-        <div class="wedding-tag">THE WEDDING OF</div>
+        <div class="wedding-tag" id="displayCoverTag">THE WEDDING OF</div>
         <div class="cover-name">
             <span>Fazl &</span>
             <span>Nadya</span>
@@ -72,7 +89,7 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
             <h3 class="guest-name">
             <?php echo $nama_tamu_tampil; ?>
             </h3>
-            <span class="guest-sub">Kami mengundang Anda untuk hadir di momen bahagia kami</span>
+            <span class="guest-sub" id="displayCoverSub">Kami mengundang Anda untuk hadir di momen bahagia kami</span>
         </div>
         
         <button class="open-btn pulse-glow" onclick="openInvitation()">
@@ -96,20 +113,26 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
     </div>
 
     <div class="glass-box greeting-box reveal delay-1">
-        <h2>Salam Hangat,</h2>
+        <h2 id="displayGreetingTitle">Salam Hangat,</h2>
         <div class="batik-divider">
             <span></span>
             <div class="batik-motif">✦ ꕥ ✦</div>
             <span></span>
         </div>
 
-        <p>
+        <div class="sacred-verse-card">
+            <p class="verse-quote" id="displayGreetingVerse">
+                “Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.” (QS. Ar-Rum: 21)
+            </p>
+        </div>
+
+        <p id="displayGreetingText1">
             Dengan penuh rasa syukur dan sukacita ke hadirat Tuhan Yang Maha Esa,
             kami bermaksud membagikan kabar bahagia ini bersama Anda. Kami mengundang
             Bapak/Ibu/Saudara/i untuk menjadi bagian dan saksi dari hari istimewa pernikahan kami.
         </p>
 
-        <p>
+        <p id="displayGreetingText2">
             Merupakan suatu kehormatan dan kebahagiaan yang mendalam bagi kami
             apabila Bapak/Ibu/Saudara/i berkenan hadir serta memberikan doa restu
             bagi langkah awal perjalanan hidup baru kami.
@@ -124,21 +147,21 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
 
     <div class="profile-card reveal">
         <div class="profile-photo">
-            <img src="assets/fazl.jpeg" alt="Fazl">
+            <img id="displayGroomPhoto" src="assets/fazl.jpeg" alt="Fazl">
             <div class="photo-frame-accent"></div>
         </div>
 
         <div class="profile-info">
             <span class="profile-role">THE GROOM</span>
-            <h1>Fazl El Hakeem, S.T</h1>
-            <p class="profile-detail">
+            <h1 id="displayGroomFull">Fazl El Hakeem, S.T</h1>
+            <p class="profile-detail" id="displayGroomBirth">
                 <strong>Lahir :</strong> 01 Januari 2007
             </p>
-            <p class="profile-detail">
+            <p class="profile-detail" id="displayGroomParents">
                 Putra tercinta dari Bapak Andy Weir &amp; Ibu Windy Floren
             </p>
 
-            <blockquote class="profile-quote">
+            <blockquote class="profile-quote" id="displayGroomQuote">
                 “Bagi saya, dia bukan hanya pasangan hidup,
                 tetapi juga rumah tempat saya selalu ingin pulang.”
             </blockquote>
@@ -156,23 +179,23 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
 
     <div class="profile-card reverse reveal">
         <div class="profile-photo-nad">
-            <img src="assets/nadya.jpeg" alt="Nadya">
+            <img id="displayBridePhoto" src="assets/nadya.jpeg" alt="Nadya">
             <div class="photo-frame-accent"></div>
         </div>
 
         <div class="profile-info">
             <span class="profile-role">THE BRIDE</span>
-            <h1>Nadya Sulfa, S.T</h1>
+            <h1 id="displayBrideFull">Nadya Sulfa, S.T</h1>
 
-            <p class="profile-detail" style="text-align: right;">
+            <p class="profile-detail" style="text-align: right;" id="displayBrideBirth">
                 <strong>Lahir :</strong> 31 Desember 2007
             </p>
 
-            <p class="profile-detail" style="text-align: right;">
+            <p class="profile-detail" style="text-align: right;" id="displayBrideParents">
                 Putri tercinta dari Bapak Ander Terzt &amp; Ibu Diana Lisen
             </p>
 
-            <blockquote class="profile-quote right">
+            <blockquote class="profile-quote right" id="displayBrideQuote">
                 “Dia adalah alasan saya percaya
                 bahwa setiap doa baik selalu menemukan jalannya di waktu yang paling tepat.”
             </blockquote>
@@ -208,12 +231,11 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
         <!-- STORY 1 -->
         <div class="story-card card-one reveal delay-1">
             <div class="paperclip">📎︎</div>
-            <img src="assets/gallery1.jpeg" alt="First Met">
+            <img id="displayStory1Photo" src="assets/gallery1.jpeg" alt="First Met">
             <div class="story-text">
-                <strong>First Met (2020)</strong>
+                <strong id="displayStory1Title">First Met (2020)</strong>
                 <span>
-                    Pertemuan di Kampus
-                    <p>“Pertemuan sederhana yang kemudian tumbuh menjadi awal dari cerita luar biasa.”</p>
+                    <p id="displayStory1Text">Pertemuan di Kampus - “Pertemuan sederhana yang kemudian tumbuh menjadi awal dari cerita luar biasa.”</p>
                 </span>
             </div>
         </div>
@@ -221,12 +243,11 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
         <!-- STORY 2 -->
         <div class="story-card card-two reveal delay-2">
             <div class="paperclip">📎︎</div>
-            <img src="assets/gallery2.jpeg" alt="The Journey">
+            <img id="displayStory2Photo" src="assets/gallery2.jpeg" alt="The Journey">
             <div class="story-text">
-                <strong>The Journey (2024–2026)</strong>
+                <strong id="displayStory2Title">The Journey (2024–2026)</strong>
                 <span>
-                    Melangkah di Tempat yang Sama
-                    <p>“Dari langkah yang seirama, tumbuh rasa saling percaya yang semakin nyata.”</p>
+                    <p id="displayStory2Text">Melangkah di Tempat yang Sama - “Dari langkah yang seirama, tumbuh rasa saling percaya yang semakin nyata.”</p>
                 </span>
             </div>
         </div>
@@ -234,12 +255,11 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
         <!-- STORY 3 -->
         <div class="story-card card-three reveal delay-3">
             <div class="paperclip">📎︎</div>
-            <img src="assets/gallery3.jpeg" alt="Beginning of Forever">
+            <img id="displayStory3Photo" src="assets/gallery3.jpeg" alt="Beginning of Forever">
             <div class="story-text">
-                <strong>Beginning of Forever (2027)</strong>
+                <strong id="displayStory3Title">Beginning of Forever (2027)</strong>
                 <span>
-                    Menuju Kehidupan Baru
-                    <p>“Hari ini bukan akhir dari perjalanan, melainkan awal dari kebersamaan selamanya.”</p>
+                    <p id="displayStory3Text">Menuju Kehidupan Baru - “Hari ini bukan akhir dari perjalanan, melainkan awal dari kebersamaan selamanya.”</p>
                 </span>
             </div>
         </div>
@@ -262,22 +282,22 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
           <span></span>
       </div>
       <div class="date-stack">
-        <span>12</span>
-        <span>12</span>
-        <span>2027</span>
+        <span id="displayEventDay">12</span>
+        <span id="displayEventMonth">12</span>
+        <span id="displayEventYear">2027</span>
       </div>
-      <p class="event-day-info">Minggu, Pukul 09:00 WIB</p>
+      <p class="event-day-info" id="displayEventTime">Minggu, Pukul 09:00 WIB</p>
     </div>
 
     <!-- 2. TENGAH: FOTO + TULISAN NAMA PASANGAN -->
     <div class="event-middle reveal">
       <div class="photo-container">
         <h2 class="couple-name">Fazl &amp;<br>Nadya</h2>
-        <img src="assets/gallery4.jpeg" alt="Fazl & Nadya" class="event-img">
+        <img id="displayEventPhoto" src="assets/gallery4.jpeg" alt="Fazl & Nadya" class="event-img">
       </div>
     </div>
 
-    <!-- 3. KANAN: COUNTDOWN ACARA -->
+    <!-- 3. KANAN: COUNTDOWN ACARA (HARI, JAM, MENIT, DETIK) -->
     <div class="event-box event-right reveal delay-2">
       <h3 class="event-title">HITUNG MUNDUR</h3>
       <div class="batik-divider" style="margin: 8px auto;">
@@ -286,6 +306,11 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
           <span></span>
       </div>
       <div class="countdown-row">
+        <div class="time-card">
+          <span id="days">00</span>
+          <small>HARI</small>
+        </div>
+        <span class="colon">:</span>
         <div class="time-card">
           <span id="hours">00</span>
           <small>JAM</small>
@@ -316,7 +341,6 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
 
     <div class="location-wrapper reveal">
         <div class="location-header">
-            <!-- <span class="section-tag">WAKTU &amp; TEMPAT PERNIKAHAN</span> -->
             <h2 class="location-title">Lokasi Acara Pernikahan</h2>
             <div class="batik-divider">
                 <span></span>
@@ -330,12 +354,12 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
             <!-- SISI KIRI: VENUE SHOWCASE (FOTO HOTEL MEWAH HD) -->
             <div class="venue-card reveal delay-1">
                 <div class="venue-image-box">
-                    <img src="assets/hotel-mewah.jpg" alt="Grand Ballroom Hotel Mulia Senayan" class="venue-img">
+                    <img id="displayVenuePhoto" src="assets/hotel-mewah.jpg" alt="Grand Ballroom Hotel Mulia Senayan" class="venue-img">
                 </div>
                 <div class="venue-details">
-                    <h3 class="venue-name">The Grand Ballroom</h3>
-                    <h4 class="venue-hotel">Hotel Mulia Senayan, Jakarta</h4>
-                    <p class="venue-address">
+                    <h3 class="venue-name" id="displayVenueName">The Grand Ballroom</h3>
+                    <h4 class="venue-hotel" id="displayVenueHotel">Hotel Mulia Senayan, Jakarta</h4>
+                    <p class="venue-address" id="displayVenueAddress">
                         Jl. Asia Afrika, Gelora, Kecamatan Tanah Abang, Kota Jakarta Pusat, DKI Jakarta 10270
                     </p>
                 </div>
@@ -362,12 +386,12 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
                 </div>
 
                 <div class="map-actions">
-                    <a href="https://www.google.com/maps/search/?api=1&query=Hotel+Mulia+Senayan+Jakarta" 
+                    <a id="displayMapsUrl"
+                       href="https://www.google.com/maps/search/?api=1&query=Hotel+Mulia+Senayan+Jakarta" 
                        target="_blank" 
                        rel="noopener noreferrer" 
                        class="luxury-map-btn pulse-glow">
                         <div class="btn-text">
-                            <!-- <small>Petunjuk Arah Akurat</small> -->
                             <strong>BUKA DI GOOGLE MAPS</strong>
                         </div>
                     </a>
@@ -382,28 +406,28 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
     <div class="gallery-wrapper reveal">
     
         <div class="gallery-item foto1" onclick="openLightbox(this)">
-            <img src="assets/gallery1.jpeg" alt="Foto 1">
+            <img id="displayGal1" src="assets/gallery1.jpeg" alt="Foto 1">
             <div class="gallery-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
             </div>
         </div>
 
         <div class="gallery-item foto2" onclick="openLightbox(this)">
-            <img src="assets/gallery3.jpeg" alt="Foto 2">
+            <img id="displayGal2" src="assets/gallery3.jpeg" alt="Foto 2">
             <div class="gallery-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
             </div>
         </div>
 
         <div class="gallery-item foto3" onclick="openLightbox(this)">
-            <img src="assets/gallery6.jpeg" alt="Foto 3">
+            <img id="displayGal3" src="assets/gallery6.jpeg" alt="Foto 3">
             <div class="gallery-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
             </div>
         </div>
 
         <div class="gallery-item foto4" onclick="openLightbox(this)">
-            <img src="assets/gallery2.jpeg" alt="Foto 4">
+            <img id="displayGal4" src="assets/gallery2.jpeg" alt="Foto 4">
             <div class="gallery-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
             </div>
@@ -426,28 +450,28 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
         </div>
 
         <div class="gallery-item foto5" onclick="openLightbox(this)">
-            <img src="assets/gallery8.jpeg" alt="Foto 5">
+            <img id="displayGal5" src="assets/gallery8.jpeg" alt="Foto 5">
             <div class="gallery-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
             </div>
         </div>
 
         <div class="gallery-item foto6" onclick="openLightbox(this)">
-            <img src="assets/1.jpeg" alt="Foto 6">
+            <img id="displayGal6" src="assets/1.jpeg" alt="Foto 6">
             <div class="gallery-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
             </div>
         </div>
 
         <div class="gallery-item foto7" onclick="openLightbox(this)">
-            <img src="assets/gallery7.jpeg" alt="Foto 7">
+            <img id="displayGal7" src="assets/gallery7.jpeg" alt="Foto 7">
             <div class="gallery-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
             </div>
         </div>
 
         <div class="gallery-item foto8" onclick="openLightbox(this)">
-            <img src="assets/gallery4.jpeg" alt="Foto 8">
+            <img id="displayGal8" src="assets/gallery4.jpeg" alt="Foto 8">
             <div class="gallery-overlay">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
             </div>
@@ -472,8 +496,8 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
         </div>
 
         <div class="movie-box">
-            <video controls poster="assets/bg.jpg">
-                <source src="assets/Movie.mp4" type="video/mp4">
+            <video id="displayVideo" controls poster="assets/bg.jpg">
+                <source id="displayVideoSrc" src="assets/Movie.mp4" type="video/mp4">
                 Browser Anda tidak mendukung video.
             </video>
         </div>
@@ -514,16 +538,27 @@ if ($id_tamu != null && array_key_exists($id_tamu, $data_tamu)) {
         </div>
       </form>
 
-      <!-- FOOTER QR CODE & CASHLESS TEXT -->
+      <!-- FOOTER QR CODE & CASHLESS TEXT + BANK TRANSFER CARD -->
       <div class="wish-cashless-footer">
         <div class="qr-box">
-            <img src="assets/QR code.jpeg" alt="QR Code Amplop Digital" class="qr-img">
+            <img id="displayQrPhoto" src="assets/QR code.jpeg" alt="QR Code Amplop Digital" class="qr-img">
         </div>
         <div class="cashless-info">
             <strong>Tanda Kasih Digital (Cashless)</strong>
-            <p class="gift-text">
+            <p class="gift-text" id="displayCashlessText">
               Doa restu Anda adalah karunia yang terindah bagi kami. Namun jika memberi merupakan ungkapan kasih, Anda dapat memberikan tanda kasih secara cashless melalui QRIS di atas.
             </p>
+            <div class="bank-card-luxury">
+                <div class="bank-badge-gold" id="displayBankName">BCA</div>
+                <div class="bank-details-wrap">
+                    <span class="bank-acc-num" id="displayAccountNumber">1234567890</span>
+                    <small class="bank-acc-name" id="displayAccountName">a.n Fazl El Hakeem</small>
+                </div>
+                <button type="button" class="btn-copy-acc" onclick="copyBankAccount()" title="Salin Nomor Rekening">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                    <span>Salin</span>
+                </button>
+            </div>
         </div>
       </div>
     </div>

@@ -82,6 +82,7 @@ const defaultGuests = [
 
 // --- INITIALIZATION ---
 document.addEventListener("DOMContentLoaded", () => {
+  initTheme();
   checkAuth();
   loadFormData();
   loadGuests();
@@ -92,6 +93,33 @@ document.addEventListener("DOMContentLoaded", () => {
     addGuestForm.addEventListener("submit", handleAddGuest);
   }
 });
+
+// --- THEME SWITCHER (DARK / LIGHT MODE) ---
+function initTheme() {
+  const savedTheme = localStorage.getItem("dashboardTheme") || "light";
+  applyTheme(savedTheme);
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+  const nextTheme = currentTheme === "dark" ? "light" : "dark";
+  applyTheme(nextTheme);
+}
+
+function applyTheme(theme) {
+  if (theme === "dark") {
+    document.documentElement.setAttribute("data-theme", "dark");
+  } else {
+    document.documentElement.removeAttribute("data-theme");
+  }
+  localStorage.setItem("dashboardTheme", theme);
+
+  const btn = document.getElementById("themeToggleBtn");
+  if (btn) {
+    btn.setAttribute("title", theme === "dark" ? "Beralih ke Mode Terang" : "Beralih ke Mode Gelap");
+    btn.setAttribute("aria-label", theme === "dark" ? "Beralih ke Mode Terang" : "Beralih ke Mode Gelap");
+  }
+}
 
 // --- AUTHENTICATION ---
 const loginForm = document.getElementById("loginForm");
